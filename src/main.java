@@ -144,8 +144,11 @@ class Parser{
     private int parseAddSub(){
 	int first_expr = parseMulDiv();
 
-	if (position > lexems.length - 1)
+	++position;
+
+	if (position > lexems.length)
 	    return first_expr;
+
 	if (lexems[position - 1].type == LexemType.SUB)
 	    return first_expr - parseAddSub();
 	else if (lexems[position - 1].type == LexemType.SUM)
@@ -155,30 +158,33 @@ class Parser{
     }
 
     private int parseMulDiv(){
-	int first_expr;
-	if (lexems[position].type == LexemType.OPEN_BRACKET)
-	    first_expr = parseBrackets();
-	else
-	    first_expr = parseAtom();
+	int first_expr = parseBrackets();
 
-	position++;
+	
+	++position;
 
-	if (position > lexems.length - 1)
+	if (position > lexems.length)
 	    return first_expr;
 
 	if (lexems[position - 1].type == LexemType.MUL)
 	    return first_expr * parseMulDiv();
 	else if (lexems[position - 1].type == LexemType.DIV)
 	    return first_expr / parseMulDiv();
-	else
+	else {
+	    --position;
 	    return first_expr;
+	}
 
     }
 
     private int parseBrackets(){
-	position++;
-	int expr = parseAddSub();
-	position++;
+	int expr;
+	if (lexems[position].type == LexemType.OPEN_BRACKET){
+	    position++;
+	    expr = parseAddSub();
+	    position++;
+	} else
+	    expr = parseAtom();
 	return expr;
     }
 
