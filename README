@@ -1,5 +1,5 @@
 This is java arithmetic expressions calculator. It is not completed.
 TODO:
-[] Lexem analyzer
-[] Expression parser
+[] Expression parser with brackets
+[] Spaces support for analyzer
 [] Refactoring
